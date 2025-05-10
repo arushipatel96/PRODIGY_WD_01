@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stopwatch</title>
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background:palevioletred;
+    }
+    .stopwatch {
+
+      background: pink;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .time {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background-attachment: fixed;
+    }
+    button {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+    button:nth-of-type(1) { background-color: #28a745; } /* Start - Green */
+    button:nth-of-type(2) { background-color: #ffc107; } /* Pause - Yellow */
+    button:nth-of-type(3) { background-color: #dc3545; } /* Reset - Red */
+    button:nth-of-type(4) { background-color: #007bff; } /* Lap - Blue */
+    .laps {
+      margin-top: 1rem;
+      text-align: left;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+  
+  </style>
+</head>
+<body>
+  <div class="stopwatch">
+    <div class="time" id="display">00:00:00</div>
+    <button onclick="start()">Start</button>
+    <button onclick="pause()">Pause</button>
+    <button onclick="reset()">Reset</button>
+    <button onclick="lap()">Lap</button>
+    <div class="laps" id="laps"></div>
+  </div>
+  <script>
+    let startTime;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    function timeToString(time) {
+      let hrs = Math.floor(time / 3600000);
+      let mins = Math.floor((time % 3600000) / 60000);
+      let secs = Math.floor((time % 60000) / 1000);
+      return (
+        (hrs < 10 ? "0" + hrs : hrs) + ":" +
+        (mins < 10 ? "0" + mins : mins) + ":" +
+        (secs < 10 ? "0" + secs : secs)
+      );
+    }
+
+    function start() {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(() => {
+        elapsedTime = Date.now() - startTime;
+        document.getElementById("display").innerText = timeToString(elapsedTime);
+      }, 1000);
+    }
+
+    function pause() {
+      clearInterval(timerInterval);
+    }
+
+    function reset() {
+      clearInterval(timerInterval);
+      elapsedTime = 0;
+      document.getElementById("display").innerText = "00:00:00";
+      document.getElementById("laps").innerHTML = "";
+    }
+
+    function lap() {
+      let lapTime = timeToString(elapsedTime);
+      let lapElement = document.createElement("div");
+      lapElement.textContent = "Lap: " + lapTime;
+      document.getElementById("laps").appendChild(lapElement);
+    }
+  </script>
+</body>
+</html>
